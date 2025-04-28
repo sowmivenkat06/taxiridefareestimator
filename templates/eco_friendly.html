@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}Eco-Friendly Options - Smart Taxi Fare Estimator{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-5">
+                <div class="card-header bg-success text-white">
+                    <h1 class="h3 mb-0"><i class="fas fa-leaf me-2"></i>Eco-Friendly Transportation Options</h1>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="https://img.freepik.com/free-vector/electric-car-concept-illustration_114360-1094.jpg" alt="Electric Vehicle" class="img-fluid rounded" style="max-width: 300px;">
+                    </div>
+                    
+                    <p class="lead mb-4">
+                        Making environmentally conscious choices in transportation not only helps reduce your carbon footprint but can also save you money. Explore the eco-friendly options available across Tamil Nadu.
+                    </p>
+                    
+                    <div class="mb-5">
+                        <h3 class="h4 mb-3">Environmental Impact of Different Taxi Types</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Vehicle Type</th>
+                                        <th>CO2 per km</th>
+                                        <th>Eco Score</th>
+                                        <th>Benefits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fas fa-car me-1"></i> Sedan</td>
+                                        <td>120g</td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-warning" style="width: 60%;">60/100</div>
+                                            </div>
+                                        </td>
+                                        <td>Better fuel efficiency than SUVs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-truck me-1"></i> SUV</td>
+                                        <td>180g</td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-danger" style="width: 40%;">40/100</div>
+                                            </div>
+                                        </td>
+                                        <td>Higher capacity for passengers or luggage</td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td><i class="fas fa-leaf me-1"></i> Electric</td>
+                                        <td>0g direct</td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-success" style="width: 90%;">90/100</div>
+                                            </div>
+                                        </td>
+                                        <td>Zero direct emissions, 10% fare discount</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fas fa-star me-1"></i> Luxury</td>
+                                        <td>150g</td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-warning" style="width: 50%;">50/100</div>
+                                            </div>
+                                        </td>
+                                        <td>Premium comfort, newer models with better emission controls</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="small text-muted">* CO2 emissions are approximate and can vary based on vehicle make, model, and driving conditions.</p>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="h4 mb-3">Eco-Friendly Initiative in Tamil Nadu</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="fas fa-charging-station text-success me-2"></i>EV Charging Infrastructure</h5>
+                                        <p class="card-text">
+                                            Tamil Nadu is rapidly expanding its EV charging network, with over 200 charging stations across major cities. The government aims to install 500 more stations by 2026.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="fas fa-hand-holding-usd text-success me-2"></i>EV Subsidies</h5>
+                                        <p class="card-text">
+                                            The Tamil Nadu Electric Vehicle Policy 2023 offers subsidies and tax benefits for EV purchases, making eco-friendly transportation more accessible.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="fas fa-taxi text-success me-2"></i>Electric Taxi Fleets</h5>
+                                        <p class="card-text">
+                                            Several taxi operators in Chennai, Coimbatore, and Madurai have introduced electric vehicles in their fleets, offering zero-emission ride options.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="fas fa-tree text-success me-2"></i>Carbon Offset Programs</h5>
+                                        <p class="card-text">
+                                            Some taxi services offer carbon offset options, allowing passengers to contribute to local reforestation and clean energy projects.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="h4 mb-3">Benefits of Choosing Eco-Friendly Options</h3>
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-4">
+                                <div class="p-3">
+                                    <i class="fas fa-globe-asia text-success fa-3x mb-3"></i>
+                                    <h5>Environmental Impact</h5>
+                                    <p>Reduce your carbon footprint and help combat climate change with every ride.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-4">
+                                <div class="p-3">
+                                    <i class="fas fa-coins text-warning fa-3x mb-3"></i>
+                                    <h5>Cost Savings</h5>
+                                    <p>Electric taxis often come with fare discounts and are less affected by fuel price fluctuations.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-4">
+                                <div class="p-3">
+                                    <i class="fas fa-lungs text-info fa-3x mb-3"></i>
+                                    <h5>Health Benefits</h5>
+                                    <p>Reduced emissions mean cleaner air and fewer respiratory health issues in urban areas.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="h4 mb-3">Visualizing Your Impact</h3>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <h5>CO2 Savings by Vehicle Type</h5>
+                                        <div class="ratio ratio-4x3">
+                                            <canvas id="ecoChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>What Your Savings Mean:</h5>
+                                        <div class="eco-equivalents mt-3">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-tree"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <strong>Tree Equivalent:</strong> Switching from an SUV to an electric taxi for a 20km daily commute is like planting a tree every 35 days.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-bolt"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <strong>Energy Savings:</strong> The same switch saves enough energy to power an average Tamil Nadu household for 3 days each month.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-rupee-sign"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <strong>Financial Impact:</strong> Over a year, you could save approximately ₹12,000 by choosing electric taxis with fare discounts.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">Tips for Eco-Friendly Travel</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-users text-primary me-2"></i>Share Your Ride</h5>
+                                        <p class="mb-0">When possible, share taxis with others going in the same direction to reduce per-person emissions and cost.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-clock text-warning me-2"></i>Travel Off-Peak</h5>
+                                        <p class="mb-0">Avoiding rush hours can mean less time in traffic, reducing emissions and saving money.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-map-marked-alt text-danger me-2"></i>Plan Efficient Routes</h5>
+                                        <p class="mb-0">Combine errands and activities in the same area to minimize unnecessary travel distance.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-battery-full text-success me-2"></i>Request Electric</h5>
+                                        <p class="mb-0">When booking taxis, specifically request electric or hybrid vehicles when available.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <a href="/fare-calculator" class="btn btn-success btn-lg">
+                            <i class="fas fa-calculator me-2"></i>Calculate Your Eco-Friendly Fare
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create eco impact chart
+        const ctx = document.getElementById('ecoChart').getContext('2d');
+        const ecoChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Electric', 'Sedan', 'Luxury', 'SUV'],
+                datasets: [{
+                    label: 'CO2 Emissions (g/km)',
+                    data: [0, 120, 150, 180],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(253, 126, 20, 0.7)',
+                        'rgba(220, 53, 69, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(253, 126, 20, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CO2 Emissions (g/km)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Vehicle Type'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y + 'g/km';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}About - Smart Taxi Fare Estimator{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0"><i class="fas fa-address-card me-2"></i>About Our Service</h1>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="https://img.freepik.com/free-vector/taxi-service-abstract-concept-illustration_335657-3826.jpg" alt="Taxi Service" class="img-fluid rounded" style="max-width: 300px;">
+                    </div>
+                    
+                    <p class="lead">The Smart Taxi Fare Estimator for Tamil Nadu is a cutting-edge tool designed to provide accurate and transparent fare predictions for taxi travel throughout Tamil Nadu, India.</p>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">Our Mission</h3>
+                        <p>
+                            Our mission is to make taxi travel more predictable, transparent, and accessible for everyone in Tamil Nadu. We believe that by providing accurate fare estimates that account for real-world conditions, we can help both passengers and drivers have a better experience.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">Key Features</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-bolt text-warning me-2"></i>Dynamic Pricing</h5>
+                                        <p class="mb-0">Our fare estimator takes into account real-time factors such as traffic, weather, demand, and time of day to provide the most accurate fare estimate possible.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-chart-line text-success me-2"></i>Predictive Analytics</h5>
+                                        <p class="mb-0">Look into the future with our fare prediction tool that estimates how prices might change in the next 15, 30, or 60 minutes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-leaf text-success me-2"></i>Eco-Friendly Options</h5>
+                                        <p class="mb-0">We promote sustainable travel by highlighting eco-friendly vehicle options and calculating the environmental impact of each journey.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5><i class="fas fa-globe text-primary me-2"></i>Multi-Currency Support</h5>
+                                        <p class="mb-0">Whether you're a local resident or an international visitor, our tool supports multiple currencies for your convenience.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">Coverage Area</h3>
+                        <p>
+                            Our Smart Taxi Fare Estimator covers all major cities and towns in Tamil Nadu, with a focus on accurate pricing for:
+                        </p>
+                        <div class="row row-cols-2 row-cols-md-3 g-3 mb-3">
+                            {% for location in locations %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    <div class="card-body py-2 px-3">
+                                        <p class="mb-0"><i class="fas fa-map-marker-alt text-danger me-2"></i>{{ location }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <p class="small text-muted">
+                            We're constantly expanding our coverage to include more areas within Tamil Nadu.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">How We Calculate Fares</h3>
+                        <p>
+                            Our fare calculation algorithm is designed to be comprehensive and fair, taking into account multiple factors:
+                        </p>
+                        <ul>
+                            <li>Base rates specific to different vehicle types</li>
+                            <li>Distance and time calculations based on optimal routes</li>
+                            <li>Real-time traffic conditions and congestion levels</li>
+                            <li>Current and forecasted weather conditions</li>
+                            <li>Time of day and typical demand patterns</li>
+                            <li>Special events that might affect demand or traffic</li>
+                        </ul>
+                        <div class="text-center mt-3">
+                            <a href="/how-it-works" class="btn btn-outline-primary">
+                                <i class="fas fa-info-circle me-2"></i>Learn More About Our Calculation Method
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">Why Choose Us?</h3>
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                    <h5>Accuracy</h5>
+                                    <p class="small mb-0">Our estimates are typically within 5-10% of actual fares</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-shield-alt text-primary fa-3x mb-3"></i>
+                                    <h5>Transparency</h5>
+                                    <p class="small mb-0">See exactly how your fare is calculated with detailed breakdowns</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3">
+                                    <i class="fas fa-sync text-info fa-3x mb-3"></i>
+                                    <h5>Real-Time</h5>
+                                    <p class="small mb-0">Up-to-date data ensures the most current pricing information</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-lightbulb fa-2x"></i>
+                            </div>
+                            <div>
+                                <h5 class="alert-heading">Did You Know?</h5>
+                                <p class="mb-0">
+                                    Tamil Nadu has a rich tradition of public transportation dating back to the early 20th century. Today, it boasts one of the most extensive transportation networks in India, with taxis playing a crucial role in urban mobility.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="/contact" class="btn btn-primary me-2">
+                            <i class="fas fa-envelope me-2"></i>Contact Us
+                        </a>
+                        <a href="/fare-calculator" class="btn btn-success">
+                            <i class="fas fa-calculator me-2"></i>Try Our Fare Calculator
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

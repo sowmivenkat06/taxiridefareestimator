@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from api.fare_calculator import calculate_fare, predict_fare
 from api.external_apis import get_traffic_conditions, get_weather_conditions, get_exchange_rate
-from api.helpers import calculate_eco_score, calculate_co2_emissions
+from api.helpers import calculate_eco_score, calculate_co2_emissions, get_eco_suggestions
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -15,10 +15,42 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET")
 CORS(app)
 
+# Tamil Nadu taxi locations
+tamil_nadu_locations = [
+    "Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", 
+    "Salem", "Tirunelveli", "Vellore", "Thoothukudi", 
+    "Erode", "Dindigul", "Thanjavur", "Ranipet"
+]
+
 @app.route('/')
 def index():
     """Render the main page of the application."""
-    return render_template('index.html')
+    return render_template('index.html', locations=tamil_nadu_locations)
+
+@app.route('/about')
+def about():
+    """Render the about page."""
+    return render_template('about.html')
+
+@app.route('/fare-calculator')
+def fare_calculator():
+    """Render the detailed fare calculator page."""
+    return render_template('fare_calculator.html', locations=tamil_nadu_locations)
+
+@app.route('/eco-friendly')
+def eco_friendly():
+    """Render the eco-friendly options page."""
+    return render_template('eco_friendly.html')
+
+@app.route('/contact')
+def contact():
+    """Render the contact page."""
+    return render_template('contact.html')
+
+@app.route('/how-it-works')
+def how_it_works():
+    """Render the how it works page explaining fare calculation."""
+    return render_template('how_it_works.html')
 
 @app.route('/api/fare/estimate', methods=['POST'])
 def estimate_fare():
@@ -31,8 +63,8 @@ def estimate_fare():
         distance = float(data.get('distance', 0))
         duration = float(data.get('duration', 0))
         taxi_type = data.get('taxi_type', 'Sedan')
-        location = data.get('location', 'New York')
-        currency = data.get('currency', 'USD')
+        location = data.get('location', 'Chennai')
+        currency = data.get('currency', 'INR')
         time_of_day = data.get('time_of_day', 'day')
         
         # Get external conditions
@@ -78,8 +110,8 @@ def predict_fare_endpoint():
         distance = float(data.get('distance', 0))
         duration = float(data.get('duration', 0))
         taxi_type = data.get('taxi_type', 'Sedan')
-        location = data.get('location', 'New York')
-        currency = data.get('currency', 'USD')
+        location = data.get('location', 'Chennai')
+        currency = data.get('currency', 'INR')
         time_of_day = data.get('time_of_day', 'day')
         time_offset = int(data.get('time_offset', 15))  # in minutes
         
