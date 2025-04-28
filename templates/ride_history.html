@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+
+{% block title %}Ride History - Smart Taxi Fare Estimator{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0"><i class="fas fa-history me-2"></i>Your Ride History</h1>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        View your past rides and fare details. This helps you track your travel patterns and expenses.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Rides</h5>
+                </div>
+                <div class="card-body">
+                    <div id="ride-history-loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading your ride history...</p>
+                    </div>
+                    
+                    <div id="ride-history-empty" class="text-center py-5 d-none">
+                        <i class="fas fa-car-side fa-3x text-muted mb-3"></i>
+                        <h5>No Ride History Yet</h5>
+                        <p class="text-muted">You haven't taken any rides yet, or your ride history isn't being tracked.</p>
+                        <a href="/" class="btn btn-primary mt-2">
+                            <i class="fas fa-calculator me-2"></i>Calculate a Fare
+                        </a>
+                    </div>
+                    
+                    <div id="ride-history-content" class="d-none">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Distance</th>
+                                        <th>Taxi Type</th>
+                                        <th>Fare</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ride-history-table">
+                                    <!-- Rides will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Expense Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div id="expense-summary-loading" class="text-center py-5">
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div id="expense-summary-content" class="d-none">
+                        <div class="row">
+                            <div class="col-6 text-center mb-4">
+                                <h6>Total Spending</h6>
+                                <h2 id="total-spending" class="text-primary mb-0">₹0.00</h2>
+                                <small class="text-muted">Last 30 days</small>
+                            </div>
+                            <div class="col-6 text-center mb-4">
+                                <h6>Average Fare</h6>
+                                <h2 id="average-fare" class="text-success mb-0">₹0.00</h2>
+                                <small class="text-muted">Per ride</small>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3">Spending by Taxi Type</h6>
+                        <canvas id="taxi-type-chart" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-leaf me-2"></i>Environmental Impact</h5>
+                </div>
+                <div class="card-body">
+                    <div id="eco-summary-loading" class="text-center py-5">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div id="eco-summary-content" class="d-none">
+                        <div class="row">
+                            <div class="col-6 text-center mb-4">
+                                <h6>Total CO2</h6>
+                                <h2 id="total-co2" class="text-danger mb-0">0g</h2>
+                                <small class="text-muted">All rides</small>
+                            </div>
+                            <div class="col-6 text-center mb-4">
+                                <h6>Tree Equivalent</h6>
+                                <h2 id="tree-equivalent-total" class="text-success mb-0">0</h2>
+                                <small class="text-muted">To offset emissions</small>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mb-3">Eco-tips Based on Your Travel</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="fas fa-leaf text-success me-2"></i>
+                                Switch to Electric taxis for your regular 5-10 km trips to save 84% emissions
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fas fa-users text-primary me-2"></i>
+                                Your travel patterns suggest carpooling opportunities on weekdays
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ride Details Modal -->
+<div class="modal fade" id="rideDetailsModal" tabindex="-1" aria-labelledby="rideDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="rideDetailsModalLabel">Ride Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-map-marker-alt text-danger me-2"></i>Trip Details</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>From:</strong></td>
+                                            <td id="detail-pickup">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>To:</strong></td>
+                                            <td id="detail-dropoff">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Distance:</strong></td>
+                                            <td id="detail-distance">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Duration:</strong></td>
+                                            <td id="detail-duration">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Taxi Type:</strong></td>
+                                            <td id="detail-taxi-type">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date & Time:</strong></td>
+                                            <td id="detail-datetime">--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-receipt text-success me-2"></i>Fare Details</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Base Fare:</strong></td>
+                                            <td id="detail-base-fare">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Distance Fare:</strong></td>
+                                            <td id="detail-distance-fare">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Time Fare:</strong></td>
+                                            <td id="detail-time-fare">--</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Adjustments:</strong></td>
+                                            <td id="detail-adjustments">--</td>
+                                        </tr>
+                                        <tr class="table-active">
+                                            <td><strong>Total Fare:</strong></td>
+                                            <td id="detail-total-fare">--</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title"><i class="fas fa-sliders-h text-info me-2"></i>Fare Modifiers</h6>
+                                <div class="row">
+                                    <div class="col-md-3 col-6 mb-3 text-center">
+                                        <div>Traffic</div>
+                                        <span id="detail-traffic" class="badge bg-warning">x1.0</span>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3 text-center">
+                                        <div>Weather</div>
+                                        <span id="detail-weather" class="badge bg-info">x1.0</span>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3 text-center">
+                                        <div>Time</div>
+                                        <span id="detail-time" class="badge bg-secondary">x1.0</span>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3 text-center">
+                                        <div>Demand</div>
+                                        <span id="detail-demand" class="badge bg-danger">x1.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">
+                    <i class="fas fa-repeat me-1"></i>Book Similar Ride
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load ride history data
+        loadRideHistory();
+        
+        // Initialize expense summary data
+        initializeSummary();
+    });
+    
+    // Load ride history from API
+    function loadRideHistory() {
+        axios.get('/api/ride/history')
+            .then(function(response) {
+                if (response.data.success) {
+                    const rideHistory = response.data.ride_history;
+                    
+                    if (rideHistory.length === 0) {
+                        // Show empty state
+                        document.getElementById('ride-history-loading').classList.add('d-none');
+                        document.getElementById('ride-history-empty').classList.remove('d-none');
+                    } else {
+                        // Populate ride history table
+                        populateRideHistory(rideHistory);
+                        
+                        // Show content
+                        document.getElementById('ride-history-loading').classList.add('d-none');
+                        document.getElementById('ride-history-content').classList.remove('d-none');
+                    }
+                } else {
+                    // Show error
+                    document.getElementById('ride-history-loading').classList.add('d-none');
+                    document.getElementById('ride-history-empty').classList.remove('d-none');
+                    console.error('Error loading ride history:', response.data.error);
+                }
+            })
+            .catch(function(error) {
+                // Show error
+                document.getElementById('ride-history-loading').classList.add('d-none');
+                document.getElementById('ride-history-empty').classList.remove('d-none');
+                console.error('Error loading ride history:', error);
+            });
+    }
+    
+    // Populate ride history table
+    function populateRideHistory(rides) {
+        const tableBody = document.getElementById('ride-history-table');
+        tableBody.innerHTML = '';
+        
+        rides.forEach(ride => {
+            const row = document.createElement('tr');
+            
+            // Format currency
+            const formattedFare = formatCurrency(ride.total_fare, ride.currency);
+            
+            row.innerHTML = `
+                <td>${ride.created_at}</td>
+                <td>${ride.pickup_location}</td>
+                <td>${ride.dropoff_location}</td>
+                <td>${ride.distance} km</td>
+                <td><span class="badge bg-secondary">${ride.taxi_type}</span></td>
+                <td>${formattedFare}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-details-btn" data-id="${ride.id}">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
+                </td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
+        
+        // Add event listeners to view details buttons
+        document.querySelectorAll('.view-details-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const rideId = this.getAttribute('data-id');
+                viewRideDetails(rideId, rides);
+            });
+        });
+    }
+    
+    // View ride details in modal
+    function viewRideDetails(rideId, rides) {
+        // Find the ride by ID
+        const ride = rides.find(r => r.id == rideId);
+        
+        if (!ride) return;
+        
+        // Populate modal with ride details
+        document.getElementById('detail-pickup').textContent = ride.pickup_location;
+        document.getElementById('detail-dropoff').textContent = ride.dropoff_location;
+        document.getElementById('detail-distance').textContent = ride.distance + ' km';
+        document.getElementById('detail-duration').textContent = ride.duration + ' min';
+        document.getElementById('detail-taxi-type').textContent = ride.taxi_type;
+        document.getElementById('detail-datetime').textContent = ride.created_at;
+        
+        // Since we don't have all details in this view, we'll use placeholders
+        document.getElementById('detail-base-fare').textContent = formatCurrency(ride.total_fare * 0.1, ride.currency);
+        document.getElementById('detail-distance-fare').textContent = formatCurrency(ride.total_fare * 0.7, ride.currency);
+        document.getElementById('detail-time-fare').textContent = formatCurrency(ride.total_fare * 0.2, ride.currency);
+        document.getElementById('detail-adjustments').textContent = formatCurrency(0, ride.currency);
+        document.getElementById('detail-total-fare').textContent = formatCurrency(ride.total_fare, ride.currency);
+        
+        // Open modal
+        const modal = new bootstrap.Modal(document.getElementById('rideDetailsModal'));
+        modal.show();
+    }
+    
+    // Initialize summary charts and data
+    function initializeSummary() {
+        // Show summary content (in a real app, we'd load this from the server)
+        document.getElementById('expense-summary-loading').classList.add('d-none');
+        document.getElementById('expense-summary-content').classList.remove('d-none');
+        
+        document.getElementById('eco-summary-loading').classList.add('d-none');
+        document.getElementById('eco-summary-content').classList.remove('d-none');
+        
+        // Initialize taxi type chart
+        const ctx = document.getElementById('taxi-type-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Sedan', 'SUV', 'Electric', 'Luxury'],
+                datasets: [{
+                    data: [65, 20, 10, 5],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    // Format currency
+    function formatCurrency(amount, currency) {
+        const symbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GBP': '£',
+            'JPY': '¥',
+            'CAD': 'C$',
+            'AUD': 'A$',
+            'CNY': '¥',
+            'INR': '₹'
+        };
+        
+        const symbol = symbols[currency] || '₹';
+        return symbol + amount.toFixed(2);
+    }
+</script>
+{% endblock %}
