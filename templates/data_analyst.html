@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Data Analysis Tool</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2684FF;
+            --secondary-color: #00875A;
+            --accent-color: #FFAB00;
+            --light-color: #F4F5F7;
+            --dark-color: #172B4D;
+            --border-radius: 0.5rem;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+        }
+        
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+        
+        .card-header {
+            font-weight: 600;
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-color: var(--primary-color);
+            border-top-width: 2px;
+        }
+        
+        .data-summary-box {
+            border-left: 3px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            background-color: rgba(38, 132, 255, 0.05);
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+        }
+        
+        .viz-thumbnail {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .viz-thumbnail:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .insight-card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .correlation-badge {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+        
+        .correlation-high {
+            background-color: rgba(0, 135, 90, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .correlation-negative {
+            background-color: rgba(222, 53, 11, 0.1);
+            color: #DE350B;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: var(--border-radius);
+        }
+        
+        .spinner-border {
+            color: var(--primary-color);
+        }
+        
+        .feature-importance-bar {
+            height: 1.5rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(38, 132, 255, 0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .feature-importance-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 1rem;
+        }
+        
+        .sample-dataset-card {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        
+        .sample-dataset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sample-dataset-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .modal-header {
+            border-bottom: none;
+            padding: 1.5rem 1.5rem 0.5rem;
+        }
+        
+        .modal-footer {
+            border-top: none;
+            padding: 0.5rem 1.5rem 1.5rem;
+        }
+        
+        .story-section {
+            margin-bottom: 2rem;
+        }
+        
+        .story-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .data-table {
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background-color: rgba(38, 132, 255, 0.05);
+            font-weight: 600;
+        }
+        
+        .data-table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-section {
+            position: sticky;
+            top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>AI-Powered Data Analysis Tool
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="load-sample-btn">
+                            <i class="fas fa-database me-1"></i>Load Sample Data
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#upload-modal" data-bs-toggle="modal" data-bs-target="#upload-modal">
+                            <i class="fas fa-upload me-1"></i>Upload File
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mb-5">
+        <div class="row">
+            <!-- Left Sidebar -->
+            <div class="col-lg-3 col-md-4">
+                <div class="sidebar-section">
+                    <!-- Dataset Info Card -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-table me-2"></i>Dataset Info</span>
+                            <span class="badge bg-primary" id="dataset-status">Not Loaded</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="dataset-info-loading" class="d-none">
+                                <div class="d-flex justify-content-center my-3">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <p class="text-center text-muted">Loading dataset...</p>
+                            </div>
+                            <div id="dataset-info-content" class="d-none">
+                                <h5 id="dataset-name" class="mb-3">Dataset Name</h5>
+                                <div class="data-summary-box">
+                                    <div class="row mb-2">
+                                        <div class="col-6">Rows:</div>
+                                        <div class="col-6 text-end fw-bold" id="dataset-rows">0</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">Columns:</div>
+                                        <div class="col-6 text-end fw-bold" id="dataset-cols">0</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">Missing Values:</div>
+                                        <div class="col-6 text-end fw-bold" id="dataset-missing">0%</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <p class="mb-2 fw-bold small">Column Types:</p>
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <small>Numeric</small>
+                                            <small id="numeric-count">0</small>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar" id="numeric-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-between">
+                                            <small>Categorical</small>
+                                            <small id="categorical-count">0</small>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-success" id="categorical-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-between">
+                                            <small>Datetime</small>
+                                            <small id="datetime-count">0</small>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" id="datetime-bar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="view-columns-btn" class="btn btn-sm btn-outline-primary w-100">
+                                    <i class="fas fa-list-ul me-1"></i>View All Columns
+                                </button>
+                            </div>
+                            <div id="dataset-info-empty" class="text-center py-4">
+                                <i class="fas fa-database text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mt-3 mb-0">No dataset loaded</p>
+                                <p class="text-muted small">Upload a file or load a sample dataset</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions Card -->
+                    <div class="card" id="actions-card">
+                        <div class="card-header">
+                            <i class="fas fa-bolt me-2"></i>Actions
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button id="analyze-btn" class="btn btn-primary" disabled>
+                                    <i class="fas fa-chart-bar me-1"></i>Analyze Data
+                                </button>
+                                <button id="get-insights-btn" class="btn btn-success" disabled>
+                                    <i class="fas fa-lightbulb me-1"></i>Get AI Insights
+                                </button>
+                                <button id="generate-story-btn" class="btn btn-warning" disabled>
+                                    <i class="fas fa-book me-1"></i>Generate Data Story
+                                </button>
+                                <button id="build-model-btn" class="btn btn-outline-dark" disabled>
+                                    <i class="fas fa-cogs me-1"></i>Build Prediction Model
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Welcome Message (shown when no data is loaded) -->
+                <div id="welcome-message" class="card">
+                    <div class="card-body text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2103/2103658.png" alt="Data Analysis" style="width: 100px; margin-bottom: 2rem;">
+                        <h2 class="mb-4">Welcome to AI-Powered Data Analysis Tool</h2>
+                        <p class="lead mb-4">Upload your dataset or load a sample to get started</p>
+                        <div class="row justify-content-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="card sample-dataset-card text-center" id="load-iris">
+                                    <div class="card-body">
+                                        <div class="sample-dataset-icon">
+                                            <i class="fas fa-leaf"></i>
+                                        </div>
+                                        <h5>Iris Dataset</h5>
+                                        <p class="text-muted small mb-0">Flower classification</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card sample-dataset-card text-center" id="load-housing">
+                                    <div class="card-body">
+                                        <div class="sample-dataset-icon">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <h5>Housing Dataset</h5>
+                                        <p class="text-muted small mb-0">Real estate pricing</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card sample-dataset-card text-center" id="load-wine">
+                                    <div class="card-body">
+                                        <div class="sample-dataset-icon">
+                                            <i class="fas fa-wine-glass-alt"></i>
+                                        </div>
+                                        <h5>Wine Dataset</h5>
+                                        <p class="text-muted small mb-0">Wine classification</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <p>Or <a href="#" data-bs-toggle="modal" data-bs-target="#upload-modal">upload your own data</a></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Explorer Tab (shown after data is loaded) -->
+                <div id="data-tabs-container" class="d-none">
+                    <ul class="nav nav-tabs mb-3" id="data-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="explorer-tab" data-bs-toggle="tab" data-bs-target="#explorer" type="button" role="tab">
+                                <i class="fas fa-table me-1"></i>Data Explorer
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">
+                                <i class="fas fa-chart-bar me-1"></i>Analysis
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="insights-tab" data-bs-toggle="tab" data-bs-target="#insights" type="button" role="tab">
+                                <i class="fas fa-lightbulb me-1"></i>AI Insights
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="story-tab" data-bs-toggle="tab" data-bs-target="#story" type="button" role="tab">
+                                <i class="fas fa-book me-1"></i>Data Story
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="models-tab" data-bs-toggle="tab" data-bs-target="#models" type="button" role="tab">
+                                <i class="fas fa-cogs me-1"></i>Models
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="data-tabs-content">
+                        <!-- Data Explorer Tab -->
+                        <div class="tab-pane fade show active" id="explorer" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-table me-2"></i>Data Preview</span>
+                                    <div>
+                                        <select id="data-rows-select" class="form-select form-select-sm">
+                                            <option value="10">10 rows</option>
+                                            <option value="25">25 rows</option>
+                                            <option value="50">50 rows</option>
+                                            <option value="100">100 rows</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div id="data-table-loading" class="d-none position-relative" style="min-height: 200px;">
+                                        <div class="loading-overlay">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="data-table-wrapper" class="data-table-wrapper">
+                                        <table id="data-table" class="table table-striped table-hover data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>No data loaded</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="2" class="text-center py-4">Load a dataset to view data</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Columns Info -->
+                            <div class="card mt-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-columns me-2"></i>Columns Information</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div id="columns-table-loading" class="d-none position-relative" style="min-height: 200px;">
+                                        <div class="loading-overlay">
+                                            <div class="spinner-border" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-table-wrapper">
+                                        <table id="columns-table" class="table table-striped table-hover data-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Column Name</th>
+                                                    <th>Type</th>
+                                                    <th>Unique Values</th>
+                                                    <th>Missing</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4" class="text-center py-4">Load a dataset to view columns</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Analysis Tab -->
+                        <div class="tab-pane fade" id="analysis" role="tabpanel">
+                            <div id="analysis-loading" class="position-relative d-none" style="min-height: 300px;">
+                                <div class="loading-overlay">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="spinner-border mb-3" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div>Running comprehensive data analysis...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="analysis-empty" class="card">
+                                <div class="card-body text-center py-5">
+                                    <i class="fas fa-chart-bar text-muted" style="font-size: 3rem;"></i>
+                                    <h4 class="mt-4">No Analysis Results</h4>
+                                    <p class="text-muted">Click "Analyze Data" to begin the analysis process</p>
+                                    <button id="analyze-empty-btn" class="btn btn-primary">
+                                        <i class="fas fa-chart-bar me-1"></i>Analyze Data
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="analysis-results" class="d-none">
+                                <!-- Visualizations Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-2"></i>Data Visualizations
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="visualizations-container" class="row">
+                                            <!-- Visualizations will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Correlations Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-project-diagram me-2"></i>Correlations
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="strong-correlations">
+                                            <!-- Correlations will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Outliers Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>Outliers
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="outliers-summary">
+                                            <!-- Outliers will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Clustering Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-object-group me-2"></i>Data Clustering
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="clusters-summary">
+                                            <!-- Clustering will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feature Importance Card -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-star me-2"></i>Important Features
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="feature-importance">
+                                            <!-- Feature importance will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Insights Tab -->
+                        <div class="tab-pane fade" id="insights" role="tabpanel">
+                            <div id="insights-loading" class="position-relative d-none" style="min-height: 300px;">
+                                <div class="loading-overlay">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="spinner-border mb-3" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div>Generating AI insights...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="insights-empty" class="card">
+                                <div class="card-body text-center py-5">
+                                    <i class="fas fa-lightbulb text-muted" style="font-size: 3rem;"></i>
+                                    <h4 class="mt-4">No AI Insights Generated</h4>
+                                    <p class="text-muted">Click "Get AI Insights" to analyze your data with AI</p>
+                                    <button id="insights-empty-btn" class="btn btn-success">
+                                        <i class="fas fa-lightbulb me-1"></i>Get AI Insights
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="insights-results" class="d-none">
+                                <!-- Key Insights Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-star me-2"></i>Key Insights
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="key-insights-list" class="list-group list-group-flush">
+                                            <!-- Key insights will be added here dynamically -->
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Patterns and Trends Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-line me-2"></i>Patterns and Trends
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="patterns-content">
+                                            <!-- Patterns will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Unusual Findings Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-exclamation-circle me-2"></i>Unusual Findings
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="unusual-findings-content">
+                                            <!-- Unusual findings will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Important Relationships Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-project-diagram me-2"></i>Important Relationships
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="relationships-content">
+                                            <!-- Relationships will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Business Implications Card -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-briefcase me-2"></i>Business Implications
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="implications-content">
+                                            <!-- Implications will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Recommendations Card -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-clipboard-list me-2"></i>Recommendations
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="recommendations-content">
+                                            <!-- Recommendations will be added here dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Story Tab -->
+                        <div class="tab-pane fade" id="story" role="tabpanel">
+                            <div id="story-loading" class="position-relative d-none" style="min-height: 300px;">
+                                <div class="loading-overlay">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="spinner-border mb-3" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div>Generating data story...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="story-empty" class="card">
+                                <div class="card-body text-center py-5">
+                                    <i class="fas fa-book text-muted" style="font-size: 3rem;"></i>
+                                    <h4 class="mt-4">No Data Story Generated</h4>
+                                    <p class="text-muted">Generate a data story to communicate insights effectively</p>
+                                    <button id="story-empty-btn" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#story-modal">
+                                        <i class="fas fa-book me-1"></i>Create Data Story
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="story-results" class="d-none">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h3 id="story-title" class="mb-4">Data Story Title</h3>
+                                        
+                                        <!-- Executive Summary -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-file-alt me-2"></i>Executive Summary</h3>
+                                            <div id="executive-summary"></div>
+                                        </div>
+                                        
+                                        <!-- Background -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-info-circle me-2"></i>Background</h3>
+                                            <div id="story-background"></div>
+                                        </div>
+                                        
+                                        <!-- Main Narrative -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-chart-line me-2"></i>Key Insights</h3>
+                                            <div id="main-narrative"></div>
+                                        </div>
+                                        
+                                        <!-- Business Implications -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-briefcase me-2"></i>Business Implications</h3>
+                                            <div id="business-implications"></div>
+                                        </div>
+                                        
+                                        <!-- Recommended Actions -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-tasks me-2"></i>Recommended Actions</h3>
+                                            <div id="recommended-actions"></div>
+                                        </div>
+                                        
+                                        <!-- Next Steps -->
+                                        <div class="story-section">
+                                            <h3><i class="fas fa-arrow-right me-2"></i>Next Steps</h3>
+                                            <div id="next-steps"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Models Tab -->
+                        <div class="tab-pane fade" id="models" role="tabpanel">
+                            <div id="models-loading" class="position-relative d-none" style="min-height: 300px;">
+                                <div class="loading-overlay">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="spinner-border mb-3" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div>Building prediction model...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="models-empty" class="card">
+                                <div class="card-body text-center py-5">
+                                    <i class="fas fa-cogs text-muted" style="font-size: 3rem;"></i>
+                                    <h4 class="mt-4">No Prediction Models Built</h4>
+                                    <p class="text-muted">Build a prediction model to forecast outcomes</p>
+                                    <button id="models-empty-btn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#model-modal">
+                                        <i class="fas fa-cogs me-1"></i>Build a Model
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="models-results" class="d-none">
+                                <!-- Model details will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- File Upload Modal -->
+    <div class="modal fade" id="upload-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>Upload Dataset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="upload-form">
+                        <div class="mb-4">
+                            <label for="file-upload" class="form-label">Select File</label>
+                            <input class="form-control" type="file" id="file-upload" accept=".csv,.xlsx,.xls,.json">
+                            <div class="form-text">Supported formats: CSV, Excel, JSON (Max 16MB)</div>
+                        </div>
+                        <div id="upload-error" class="alert alert-danger d-none"></div>
+                        <div id="upload-success" class="alert alert-success d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="upload-btn" class="btn btn-primary">
+                        <span id="upload-btn-text">Upload</span>
+                        <span id="upload-btn-loading" class="d-none">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span>Uploading...</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sample Data Selection Modal -->
+    <div class="modal fade" id="sample-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-database me-2"></i>Load Sample Dataset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card sample-dataset-card text-center" data-dataset="iris">
+                                <div class="card-body">
+                                    <div class="sample-dataset-icon">
+                                        <i class="fas fa-leaf"></i>
+                                    </div>
+                                    <h5>Iris Dataset</h5>
+                                    <p class="text-muted small mb-0">Flower classification</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card sample-dataset-card text-center" data-dataset="boston">
+                                <div class="card-body">
+                                    <div class="sample-dataset-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <h5>Housing Dataset</h5>
+                                    <p class="text-muted small mb-0">Real estate pricing</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card sample-dataset-card text-center" data-dataset="wine">
+                                <div class="card-body">
+                                    <div class="sample-dataset-icon">
+                                        <i class="fas fa-wine-glass-alt"></i>
+                                    </div>
+                                    <h5>Wine Dataset</h5>
+                                    <p class="text-muted small mb-0">Wine classification</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card sample-dataset-card text-center" data-dataset="diabetes">
+                                <div class="card-body">
+                                    <div class="sample-dataset-icon">
+                                        <i class="fas fa-heartbeat"></i>
+                                    </div>
+                                    <h5>Diabetes Dataset</h5>
+                                    <p class="text-muted small mb-0">Disease prediction</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sample-error" class="alert alert-danger d-none mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Generate Story Modal -->
+    <div class="modal fade" id="story-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-book me-2"></i>Generate Data Story</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="story-form">
+                        <div class="mb-3">
+                            <label for="story-title-input" class="form-label">Story Title</label>
+                            <input type="text" class="form-control" id="story-title-input" placeholder="Enter a title for your data story">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Focus Areas (optional)</label>
+                            <div id="focus-areas-container">
+                                <!-- Focus areas checkboxes will be added here dynamically -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="generate-story-modal-btn" class="btn btn-warning">Generate Story</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Build Model Modal -->
+    <div class="modal fade" id="model-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-cogs me-2"></i>Build Prediction Model</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="model-form">
+                        <div class="mb-3">
+                            <label for="target-column" class="form-label">Target Column (what to predict)</label>
+                            <select class="form-select" id="target-column" required>
+                                <option value="">Select column to predict</option>
+                                <!-- Options will be added here dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Feature Selection (optional)</label>
+                            <div class="form-text mb-2">Leave blank to use all available features</div>
+                            <div id="features-container">
+                                <!-- Feature checkboxes will be added here dynamically -->
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="test-size" class="form-label">Test Set Size</label>
+                            <select class="form-select" id="test-size">
+                                <option value="0.2">20% Test, 80% Train</option>
+                                <option value="0.3" selected>30% Test, 70% Train</option>
+                                <option value="0.4">40% Test, 60% Train</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="include-categorical">
+                            <label class="form-check-label" for="include-categorical">Include categorical features</label>
+                        </div>
+                        <div id="model-error" class="alert alert-danger d-none"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="build-model-modal-btn" class="btn btn-dark">Build Model</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Visualization Modal -->
+    <div class="modal fade" id="viz-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viz-modal-title">Visualization</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="viz-modal-image" src="" alt="Visualization" class="img-fluid">
+                    <div id="viz-analysis" class="mt-4">
+                        <div id="viz-analysis-loading" class="d-none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Analyzing visualization with AI...</p>
+                        </div>
+                        <div id="viz-analysis-content" class="d-none mt-3 text-start">
+                            <h5><i class="fas fa-robot me-2"></i>AI Analysis</h5>
+                            <div id="viz-analysis-text" class="p-3 bg-light rounded"></div>
+                        </div>
+                        <button id="analyze-viz-btn" class="btn btn-primary mt-3">
+                            <i class="fas fa-robot me-1"></i>Analyze with AI
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Column Details Modal -->
+    <div class="modal fade" id="column-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="column-modal-title">Column Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="column-details-content">
+                        <!-- Column details will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Axios for API requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <!-- App JavaScript -->
+    <script src="{{ url_for('static', filename='js/data_analyst.js') }}"></script>
+</body>
+</html>
