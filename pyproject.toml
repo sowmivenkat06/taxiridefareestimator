@@ -18,4 +18,5 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "numpy>=2.2.5",
     "seaborn>=0.13.2",
+    "trafilatura>=2.0.0",
 ]
