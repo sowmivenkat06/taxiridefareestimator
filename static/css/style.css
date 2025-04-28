@@ -18,10 +18,13 @@ body {
 
 /* Hero Section */
 .hero-section {
-    background-color: #343a40;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/static/img/taxi-hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
     color: white;
     padding: 5rem 0;
     position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Feature Icons */
