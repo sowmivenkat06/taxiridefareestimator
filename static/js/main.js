@@ -419,6 +419,79 @@ function updatePredictionDisplay(data) {
     });
 }
 
+// Calculate quick fare from the homepage form
+function calculateQuickFare() {
+    // Show loading state
+    const quickFareLoading = document.getElementById('quick-fare-loading');
+    const quickFareDetails = document.getElementById('quick-fare-details');
+    
+    if (quickFareLoading && quickFareDetails) {
+        quickFareLoading.classList.remove('d-none');
+        quickFareDetails.classList.add('d-none');
+    }
+    
+    // Get form values
+    const distance = parseFloat(document.getElementById('distance-quick').value);
+    const duration = parseFloat(document.getElementById('duration-quick').value);
+    
+    // Get selected taxi type from the quick form
+    let taxiType = 'Sedan'; // Default
+    const taxiOptions = document.getElementsByName('taxi-type-quick');
+    for (const option of taxiOptions) {
+        if (option.checked) {
+            taxiType = option.value;
+            break;
+        }
+    }
+    
+    const location = document.getElementById('location-quick').value;
+    const currency = document.getElementById('currency-select').value;
+    
+    // Set currency symbol for display
+    setCurrencySymbol(currency);
+    
+    // Prepare request data (use 'day' as default time_of_day)
+    const requestData = {
+        distance: distance,
+        duration: duration,
+        taxi_type: taxiType,
+        location: location,
+        time_of_day: 'day',
+        currency: currency
+    };
+    
+    // Call API for fare estimation
+    axios.post('/api/fare/estimate', requestData)
+        .then(function(response) {
+            fareData = response.data;
+            
+            // Update quick fare UI
+            if (quickFareDetails) {
+                // Update amount
+                const quickFareAmount = document.getElementById('quick-fare-amount');
+                if (quickFareAmount) {
+                    quickFareAmount.textContent = currencySymbol + fareData.adjusted_fare.toFixed(2);
+                }
+                
+                // Update factor badges
+                updateFactorBadge('quick-traffic-factor', fareData.factors.traffic.condition, fareData.factors.traffic.modifier);
+                updateFactorBadge('quick-weather-factor', fareData.factors.weather.condition, fareData.factors.weather.modifier);
+                updateFactorBadge('quick-demand-factor', fareData.factors.demand.level, fareData.factors.demand.modifier);
+                
+                // Show the result
+                quickFareLoading.classList.add('d-none');
+                quickFareDetails.classList.remove('d-none');
+            }
+        })
+        .catch(function(error) {
+            console.error('Error calculating quick fare:', error);
+            // Show error message if possible
+            if (quickFareLoading) {
+                quickFareLoading.innerHTML = '<div class="alert alert-danger">Failed to calculate fare. Please try again.</div>';
+            }
+        });
+}
+
 // Generate smart suggestions based on fare data
 function generateSuggestions() {
     const distance = parseFloat(document.getElementById('distance').value);
