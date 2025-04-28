@@ -1,7 +1,9 @@
 import os
 import logging
+from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 from api.fare_calculator import calculate_fare, predict_fare
 from api.external_apis import get_traffic_conditions, get_weather_conditions, get_exchange_rate
 from api.helpers import calculate_eco_score, calculate_co2_emissions, get_eco_suggestions
@@ -12,8 +14,19 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET")
+app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 CORS(app)
+
+# Configure SQLAlchemy
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_recycle": 300,
+    "pool_pre_ping": True,
+}
+
+# Initialize database
+db = SQLAlchemy(app)
 
 # Tamil Nadu taxi locations
 tamil_nadu_locations = [
