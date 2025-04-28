@@ -9,38 +9,81 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup range input value displays
     setupRangeInputs();
     
-    // Setup form submission
-    document.getElementById('fare-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Setup form submission - only if the form exists (on fare calculator page)
+    const fareForm = document.getElementById('fare-form');
+    if (fareForm) {
+        fareForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateFare();
+        });
+        
+        // Initial calculation on page load - only for fare calculator page
         calculateFare();
-    });
+    }
+    
+    // Setup quick fare form on homepage
+    const quickFareForm = document.getElementById('quick-fare-form');
+    if (quickFareForm) {
+        quickFareForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateQuickFare();
+        });
+    }
     
     // Setup currency change handler
-    document.getElementById('currency-select').addEventListener('change', function() {
-        if (fareData) {
-            calculateFare();
-        }
-    });
-    
-    // Initial calculation on page load
-    calculateFare();
+    const currencySelect = document.getElementById('currency-select');
+    if (currencySelect) {
+        currencySelect.addEventListener('change', function() {
+            if (fareData) {
+                if (document.getElementById('fare-form')) {
+                    calculateFare();
+                } else if (document.getElementById('quick-fare-form')) {
+                    calculateQuickFare();
+                }
+            }
+        });
+    }
 });
 
 // Setup range input displays
 function setupRangeInputs() {
+    // Regular fare calculator page inputs
     const distanceInput = document.getElementById('distance');
     const distanceValue = document.getElementById('distance-value');
     
-    distanceInput.addEventListener('input', function() {
-        distanceValue.textContent = this.value + ' km';
-    });
+    if (distanceInput && distanceValue) {
+        distanceInput.addEventListener('input', function() {
+            distanceValue.textContent = this.value + ' km';
+        });
+    }
     
     const durationInput = document.getElementById('duration');
     const durationValue = document.getElementById('duration-value');
     
-    durationInput.addEventListener('input', function() {
-        durationValue.textContent = this.value + ' min';
-    });
+    if (durationInput && durationValue) {
+        durationInput.addEventListener('input', function() {
+            durationValue.textContent = this.value + ' min';
+        });
+    }
+    
+    // Quick calculator inputs on homepage
+    const distanceQuickInput = document.getElementById('distance-quick');
+    const distanceQuickValue = document.getElementById('distance-value-quick');
+    
+    if (distanceQuickInput && distanceQuickValue) {
+        distanceQuickInput.addEventListener('input', function() {
+            distanceQuickValue.textContent = this.value + ' km';
+        });
+    }
+    
+    const durationQuickInput = document.getElementById('duration-quick');
+    const durationQuickValue = document.getElementById('duration-value-quick');
+    
+    if (durationQuickInput && durationQuickValue) {
+        durationQuickInput.addEventListener('input', function() {
+            durationQuickValue.textContent = this.value + ' min';
+        });
+    }
 }
 
 // Get selected taxi type
@@ -108,40 +151,59 @@ function calculateFare() {
         });
 }
 
+// Helper function to safely toggle element classes
+function toggleElementClass(id, addClass, removeClass) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.classList.add(addClass);
+        element.classList.remove(removeClass);
+    }
+}
+
 // Show loading state for all sections
 function showLoadingState() {
-    document.getElementById('fare-loading').classList.remove('d-none');
-    document.getElementById('fare-details').classList.add('d-none');
+    // Fare section
+    toggleElementClass('fare-loading', '', 'd-none');
+    toggleElementClass('fare-details', 'd-none', '');
     
-    document.getElementById('factors-loading').classList.remove('d-none');
-    document.getElementById('fare-factors').classList.add('d-none');
+    // Factors section
+    toggleElementClass('factors-loading', '', 'd-none');
+    toggleElementClass('fare-factors', 'd-none', '');
     
-    document.getElementById('eco-loading').classList.remove('d-none');
-    document.getElementById('eco-details').classList.add('d-none');
+    // Eco section
+    toggleElementClass('eco-loading', '', 'd-none');
+    toggleElementClass('eco-details', 'd-none', '');
     
-    document.getElementById('prediction-loading').classList.remove('d-none');
-    document.getElementById('prediction-details').classList.add('d-none');
+    // Prediction section
+    toggleElementClass('prediction-loading', '', 'd-none');
+    toggleElementClass('prediction-details', 'd-none', '');
     
-    document.getElementById('suggestions-loading').classList.remove('d-none');
-    document.getElementById('suggestions-content').classList.add('d-none');
+    // Suggestions section
+    toggleElementClass('suggestions-loading', '', 'd-none');
+    toggleElementClass('suggestions-content', 'd-none', '');
 }
 
 // Hide loading state for all sections
 function hideLoadingState() {
-    document.getElementById('fare-loading').classList.add('d-none');
-    document.getElementById('fare-details').classList.remove('d-none');
+    // Fare section
+    toggleElementClass('fare-loading', 'd-none', '');
+    toggleElementClass('fare-details', '', 'd-none');
     
-    document.getElementById('factors-loading').classList.add('d-none');
-    document.getElementById('fare-factors').classList.remove('d-none');
+    // Factors section
+    toggleElementClass('factors-loading', 'd-none', '');
+    toggleElementClass('fare-factors', '', 'd-none');
     
-    document.getElementById('eco-loading').classList.add('d-none');
-    document.getElementById('eco-details').classList.remove('d-none');
+    // Eco section
+    toggleElementClass('eco-loading', 'd-none', '');
+    toggleElementClass('eco-details', '', 'd-none');
     
-    document.getElementById('prediction-loading').classList.add('d-none');
-    document.getElementById('prediction-details').classList.remove('d-none');
+    // Prediction section
+    toggleElementClass('prediction-loading', 'd-none', '');
+    toggleElementClass('prediction-details', '', 'd-none');
     
-    document.getElementById('suggestions-loading').classList.add('d-none');
-    document.getElementById('suggestions-content').classList.remove('d-none');
+    // Suggestions section
+    toggleElementClass('suggestions-loading', 'd-none', '');
+    toggleElementClass('suggestions-content', '', 'd-none');
 }
 
 // Set currency symbol based on selected currency

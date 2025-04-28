@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="#1a237e" />
+  
+  <!-- City skyline silhouette -->
+  <path d="M0,550 L100,550 L120,500 L150,530 L180,480 L220,530 L240,450 L280,500 L320,480 L350,550 L400,450 L430,550 L480,500 L520,450 L550,500 L600,480 L650,530 L700,450 L720,530 L750,480 L780,550 L800,500 L840,550 L880,530 L900,450 L950,500 L980,450 L1000,530 L1040,480 L1080,550 L1120,500 L1150,450 L1180,530 L1220,500 L1250,450 L1300,550 L1350,500 L1380,530 L1420,480 L1450,550 L1500,450 L1550,530 L1580,500 L1620,450 L1650,530 L1700,480 L1750,550 L1800,450 L1850,500 L1900,530 L1920,550 L1920,1080 L0,1080 Z" fill="#0a1128" />
+  
+  <!-- Roads -->
+  <rect x="0" y="700" width="1920" height="30" fill="#263238" />
+  <rect x="0" y="800" width="1920" height="50" fill="#263238" />
+  <rect x="0" y="950" width="1920" height="40" fill="#263238" />
+  
+  <!-- Road markings -->
+  <rect x="50" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="250" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="450" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="650" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="850" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="1050" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="1250" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="1450" y="715" width="100" height="3" fill="#ffd600" />
+  <rect x="1650" y="715" width="100" height="3" fill="#ffd600" />
+  
+  <rect x="50" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="250" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="450" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="650" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="850" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="1050" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="1250" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="1450" y="825" width="100" height="5" fill="#ffffff" />
+  <rect x="1650" y="825" width="100" height="5" fill="#ffffff" />
+  
+  <rect x="50" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="250" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="450" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="650" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="850" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="1050" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="1250" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="1450" y="970" width="100" height="4" fill="#ffd600" />
+  <rect x="1650" y="970" width="100" height="4" fill="#ffd600" />
+  
+  <!-- Stars in the night sky -->
+  <circle cx="200" cy="100" r="2" fill="#ffffff" />
+  <circle cx="400" cy="150" r="1.5" fill="#ffffff" />
+  <circle cx="600" cy="80" r="2" fill="#ffffff" />
+  <circle cx="800" cy="200" r="1.5" fill="#ffffff" />
+  <circle cx="1000" cy="120" r="2" fill="#ffffff" />
+  <circle cx="1200" cy="180" r="1.5" fill="#ffffff" />
+  <circle cx="1400" cy="90" r="2" fill="#ffffff" />
+  <circle cx="1600" cy="220" r="1.5" fill="#ffffff" />
+  <circle cx="1800" cy="130" r="2" fill="#ffffff" />
+  <circle cx="150" cy="250" r="1.5" fill="#ffffff" />
+  <circle cx="350" cy="300" r="2" fill="#ffffff" />
+  <circle cx="550" cy="280" r="1.5" fill="#ffffff" />
+  <circle cx="750" cy="350" r="2" fill="#ffffff" />
+  <circle cx="950" cy="320" r="1.5" fill="#ffffff" />
+  <circle cx="1150" cy="270" r="2" fill="#ffffff" />
+  <circle cx="1350" cy="330" r="1.5" fill="#ffffff" />
+  <circle cx="1550" cy="290" r="2" fill="#ffffff" />
+  <circle cx="1750" cy="360" r="1.5" fill="#ffffff" />
+  
+  <!-- Taxis -->
+  <!-- Taxi 1 -->
+  <g transform="translate(300, 780)">
+    <rect x="0" y="0" width="120" height="30" rx="8" fill="#FFCC00" />
+    <rect x="15" y="-15" width="90" height="15" rx="5" fill="#FFCC00" />
+    <rect x="25" y="-10" width="70" height="10" fill="#111111" />
+    <circle cx="30" cy="30" r="12" fill="#333333" />
+    <circle cx="30" cy="30" r="6" fill="#111111" />
+    <circle cx="90" cy="30" r="12" fill="#333333" />
+    <circle cx="90" cy="30" r="6" fill="#111111" />
+    <rect x="0" y="10" width="5" height="5" fill="#ffffff" />
+    <rect x="115" y="10" width="5" height="5" fill="#ff3333" />
+    <rect x="50" y="-20" width="20" height="5" fill="#ffffff" />
+    <text x="60" y="-5" text-anchor="middle" fill="#000000" font-family="Arial" font-size="8" font-weight="bold">TAXI</text>
+  </g>
+  
+  <!-- Taxi 2 -->
+  <g transform="translate(1500, 700)">
+    <rect x="0" y="0" width="120" height="30" rx="8" fill="#FFCC00" />
+    <rect x="15" y="-15" width="90" height="15" rx="5" fill="#FFCC00" />
+    <rect x="25" y="-10" width="70" height="10" fill="#111111" />
+    <circle cx="30" cy="30" r="12" fill="#333333" />
+    <circle cx="30" cy="30" r="6" fill="#111111" />
+    <circle cx="90" cy="30" r="12" fill="#333333" />
+    <circle cx="90" cy="30" r="6" fill="#111111" />
+    <rect x="0" y="10" width="5" height="5" fill="#ffffff" />
+    <rect x="115" y="10" width="5" height="5" fill="#ff3333" />
+    <rect x="50" y="-20" width="20" height="5" fill="#ffffff" />
+    <text x="60" y="-5" text-anchor="middle" fill="#000000" font-family="Arial" font-size="8" font-weight="bold">TAXI</text>
+  </g>
+  
+  <!-- Taxi 3 -->
+  <g transform="translate(800, 950)">
+    <rect x="0" y="0" width="120" height="30" rx="8" fill="#FFCC00" />
+    <rect x="15" y="-15" width="90" height="15" rx="5" fill="#FFCC00" />
+    <rect x="25" y="-10" width="70" height="10" fill="#111111" />
+    <circle cx="30" cy="30" r="12" fill="#333333" />
+    <circle cx="30" cy="30" r="6" fill="#111111" />
+    <circle cx="90" cy="30" r="12" fill="#333333" />
+    <circle cx="90" cy="30" r="6" fill="#111111" />
+    <rect x="0" y="10" width="5" height="5" fill="#ffffff" />
+    <rect x="115" y="10" width="5" height="5" fill="#ff3333" />
+    <rect x="50" y="-20" width="20" height="5" fill="#ffffff" />
+    <text x="60" y="-5" text-anchor="middle" fill="#000000" font-family="Arial" font-size="8" font-weight="bold">TAXI</text>
+  </g>
+  
+  <!-- Buildings with lights -->
+  <rect x="400" y="400" width="100" height="150" fill="#1a237e" />
+  <rect x="410" y="410" width="15" height="20" fill="#FFEB3B" />
+  <rect x="440" y="410" width="15" height="20" fill="#FFEB3B" />
+  <rect x="470" y="410" width="15" height="20" fill="#FFEB3B" />
+  <rect x="410" y="445" width="15" height="20" fill="#FFEB3B" />
+  <rect x="440" y="445" width="15" height="20" fill="#FFEB3B" />
+  <rect x="470" y="445" width="15" height="20" fill="#FFEB3B" />
+  <rect x="410" y="480" width="15" height="20" fill="#FFEB3B" />
+  <rect x="440" y="480" width="15" height="20" fill="#FFEB3B" />
+  <rect x="470" y="480" width="15" height="20" fill="#FFEB3B" />
+  
+  <rect x="1200" y="350" width="150" height="200" fill="#1a237e" />
+  <rect x="1220" y="370" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1260" y="370" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1300" y="370" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1220" y="410" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1260" y="410" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1300" y="410" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1220" y="450" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1260" y="450" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1300" y="450" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1220" y="490" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1260" y="490" width="20" height="25" fill="#FFEB3B" />
+  <rect x="1300" y="490" width="20" height="25" fill="#FFEB3B" />
+</svg>
