@@ -2,6 +2,10 @@
 
 A feature-rich web application that provides advanced taxi fare estimates across Tamil Nadu. Adjust trip details, fare factors, and see real-time predictions, cost breakdowns, and environmental impact.
 
+ ## 🌐 Live Preview
+    >    🔗 Hosted: `https://taxiridefareestimator-1.onrender.com`
+
+    
 ![App Picture1](./Picture1.png)
 
 ## ✨ Features
@@ -16,6 +20,7 @@ A feature-rich web application that provides advanced taxi fare estimates across
 - 🖨️ Print fare estimate
 - ✅ Eco-friendly option suggestion
 
+ 
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML, CSS (Bootstrap), JavaScript
