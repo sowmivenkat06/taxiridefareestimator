@@ -2,7 +2,7 @@
 
 A feature-rich web application that provides advanced taxi fare estimates across Tamil Nadu. Adjust trip details, fare factors, and see real-time predictions, cost breakdowns, and environmental impact.
 
-!(./Picture1.png)
+![App Picture1](./Picture1.png)
 
 ## ✨ Features
 
