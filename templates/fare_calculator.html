@@ -28,18 +28,6 @@
                 </div>
                 <div class="card-body">
                     <form id="fare-form">
-                        <div class="mb-3">
-                            <label for="location-advanced" class="form-label">City in Tamil Nadu</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                <select id="location-advanced" class="form-select">
-                                    {% for location in locations %}
-                                    <option value="{{ location }}"{% if location == 'Chennai' %} selected{% endif %}>{{ location }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        
                         <div class="row mb-3">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="pickup-location" class="form-label">Pickup Location</label>
@@ -146,31 +134,17 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="passengers" class="form-label">Passengers</label>
+                                    <label for="currency-advanced" class="form-label">Currency</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-users"></i></span>
-                                        <select id="passengers" class="form-select">
-                                            <option>1</option>
-                                            <option selected>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5+</option>
+                                        <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                        <select id="currency-advanced" class="form-select">
+                                            <option value="INR" selected>Indian Rupee (₹)</option>
+                                            <option value="USD">US Dollar ($)</option>
+                                            <option value="EUR">Euro (€)</option>
+                                            <option value="GBP">British Pound (£)</option>
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="currency-advanced" class="form-label">Currency</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                <select id="currency-advanced" class="form-select">
-                                    <option value="INR" selected>Indian Rupee (₹)</option>
-                                    <option value="USD">US Dollar ($)</option>
-                                    <option value="EUR">Euro (€)</option>
-                                    <option value="GBP">British Pound (£)</option>
-                                </select>
                             </div>
                         </div>
                         

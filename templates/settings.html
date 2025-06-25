@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - TamilRide{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Password Change Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Change Password</h3>
+                    <form id="passwordForm">
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" 
+                                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                   title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 characters" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_new_password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm_new_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Preferences Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Preferences</h3>
+                    <form id="preferencesForm">
+                        <div class="mb-3">
+                            <label for="default_currency" class="form-label">Default Currency</label>
+                            <select class="form-select" id="default_currency" name="default_currency">
+                                <option value="INR" {% if user.preferences.preferred_currency == 'INR' %}selected{% endif %}>Indian Rupee (₹)</option>
+                                <option value="USD" {% if user.preferences.preferred_currency == 'USD' %}selected{% endif %}>US Dollar ($)</option>
+                                <option value="EUR" {% if user.preferences.preferred_currency == 'EUR' %}selected{% endif %}>Euro (€)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="default_taxi" class="form-label">Preferred Taxi Type</label>
+                            <select class="form-select" id="default_taxi" name="default_taxi">
+                                <option value="Sedan" {% if user.preferences.preferred_taxi_type == 'Sedan' %}selected{% endif %}>Sedan</option>
+                                <option value="SUV" {% if user.preferences.preferred_taxi_type == 'SUV' %}selected{% endif %}>SUV</option>
+                                <option value="Premium" {% if user.preferences.preferred_taxi_type == 'Premium' %}selected{% endif %}>Premium</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="eco_friendly" name="eco_friendly"
+                                   {% if user.preferences.eco_friendly_preference %}checked{% endif %}>
+                            <label class="form-check-label" for="eco_friendly">Prefer eco-friendly options</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Preferences</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Notification Settings Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Notification Settings</h3>
+                    <form id="notificationForm">
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="email_notifications" name="email_notifications"
+                                   {% if user.preferences.notification_preference %}checked{% endif %}>
+                            <label class="form-check-label" for="email_notifications">Email Notifications</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="price_alerts" name="price_alerts"
+                                   {% if user.preferences.price_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="price_alerts">Price Alerts</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="promotional_emails" name="promotional_emails"
+                                   {% if user.preferences.promotional_emails %}checked{% endif %}>
+                            <label class="form-check-label" for="promotional_emails">Promotional Emails</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Notifications</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Password Change Form Handler
+document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const newPassword = document.getElementById('new_password').value;
+    const confirmPassword = document.getElementById('confirm_new_password').value;
+    
+    if (newPassword !== confirmPassword) {
+        alert('New passwords do not match');
+        return;
+    }
+    
+    const data = {
+        current_password: document.getElementById('current_password').value,
+        new_password: newPassword
+    };
+    
+    try {
+        const response = await fetch('/api/user/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Password updated successfully');
+            this.reset();
+        } else {
+            alert(result.error || 'Failed to update password');
+        }
+    } catch (error) {
+        alert('An error occurred while updating password');
+    }
+});
+
+// Preferences Form Handler
+document.getElementById('preferencesForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const data = {
+        default_currency: document.getElementById('default_currency').value,
+        default_taxi: document.getElementById('default_taxi').value,
+        eco_friendly: document.getElementById('eco_friendly').checked
+    };
+    
+    try {
+        const response = await fetch('/api/user/preferences', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Preferences saved successfully');
+        } else {
+            alert(result.error || 'Failed to save preferences');
+        }
+    } catch (error) {
+        alert('An error occurred while saving preferences');
+    }
+});
+
+// Notification Settings Form Handler
+document.getElementById('notificationForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const data = {
+        email_notifications: document.getElementById('email_notifications').checked,
+        price_alerts: document.getElementById('price_alerts').checked,
+        promotional_emails: document.getElementById('promotional_emails').checked
+    };
+    
+    try {
+        const response = await fetch('/api/user/notifications', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Notification settings updated successfully');
+        } else {
+            alert(result.error || 'Failed to update notification settings');
+        }
+    } catch (error) {
+        alert('An error occurred while updating notification settings');
+    }
+});
+</script>
+{% endblock %} 

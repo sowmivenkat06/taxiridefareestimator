@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - TamilRide{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Profile Info Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="avatar-circle mb-3">
+                            <span class="initials">{{ user.username[0]|upper }}</span>
+                        </div>
+                        <h2 class="mb-0">{{ user.username }}</h2>
+                        <p class="text-muted">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+                    </div>
+                    
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label for="display_name" class="form-label">Display Name</label>
+                            <input type="text" class="form-control" id="display_name" name="display_name" 
+                                   value="{{ user.display_name if user.display_name else user.username }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{{ user.email }}" readonly>
+                            <div class="form-text">Contact support to change your email address</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   value="{{ user.phone if user.phone else '' }}"
+                                   pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3">{{ user.bio if user.bio else '' }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recent Activity Card -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Recent Activity</h3>
+                    {% if user.ride_histories %}
+                        <div class="list-group">
+                        {% for ride in user.ride_histories[:5] %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ ride.pickup_location }} to {{ ride.dropoff_location }}</h6>
+                                    <small class="text-muted">{{ ride.created_at.strftime('%Y-%m-%d') }}</small>
+                                </div>
+                                <p class="mb-1">{{ ride.taxi_type }} - {{ ride.currency }} {{ "%.2f"|format(ride.total_fare) }}</p>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('ride_history') }}" class="btn btn-outline-primary">View All Activity</a>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No recent activity</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.initials {
+    font-size: 40px;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {
+        display_name: formData.get('display_name'),
+        phone: formData.get('phone'),
+        bio: formData.get('bio')
+    };
+    
+    try {
+        const response = await fetch('/api/user/profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert('Profile updated successfully');
+        } else {
+            alert(result.error || 'Failed to update profile');
+        }
+    } catch (error) {
+        alert('An error occurred while updating profile');
+    }
+});
+</script>
+{% endblock %} 
