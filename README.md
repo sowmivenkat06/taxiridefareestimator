@@ -21,4 +21,4 @@ A feature-rich web application that provides advanced taxi fare estimates across
 - **Frontend:** HTML, CSS (Bootstrap), JavaScript
 - **Backend:** Python (Flask)
 - **Visualization:** Chart.js
-- 
+  
