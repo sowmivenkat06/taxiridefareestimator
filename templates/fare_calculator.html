@@ -2,407 +2,94 @@
 
 {% block title %}Fare Calculator - Smart Taxi Fare Estimator{% endblock %}
 
+{% block head %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
+<div class="container py-4">
     <div class="row">
-        <div class="col-12 mb-4">
+        <!-- Map Section -->
+        <div class="col-lg-8 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h1 class="h3 mb-0"><i class="fas fa-calculator me-2"></i>Advanced Fare Calculator</h1>
+                    <h5 class="mb-0"><i class="fas fa-map-marked-alt me-2"></i>Select Locations</h5>
                 </div>
-                <div class="card-body">
-                    <p class="lead">
-                        Use our advanced fare calculator to get precise fare estimates for taxi trips across Tamil Nadu. Adjust all parameters to see their impact on the final fare.
-                    </p>
+                <div class="card-body p-0">
+                    <div id="map" style="height: 500px;"></div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div class="row">
-        <!-- Input Form -->
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="fas fa-map-marked-alt me-2"></i>Trip Details</h5>
+
+        <!-- Calculator Form -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Fare Calculator</h5>
                 </div>
                 <div class="card-body">
-                    <form id="fare-form">
+                    <form id="fareCalculatorForm">
+                        <!-- Location Inputs -->
                         <div class="mb-3">
-                            <label for="location-advanced" class="form-label">City in Tamil Nadu</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                <select id="location-advanced" class="form-select">
-                                    {% for location in locations %}
-                                    <option value="{{ location }}"{% if location == 'Chennai' %} selected{% endif %}>{{ location }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            <label for="pickup_location" class="form-label">Pickup Location</label>
+                            <input type="text" class="form-control" id="pickup_location" placeholder="Enter pickup location">
                         </div>
-                        
+                        <div class="mb-3">
+                            <label for="dropoff_location" class="form-label">Dropoff Location</label>
+                            <input type="text" class="form-control" id="dropoff_location" placeholder="Enter dropoff location">
+                        </div>
+
+                        <!-- Distance and Duration (auto-filled) -->
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="pickup-location" class="form-label">Pickup Location</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
-                                    <input type="text" class="form-control" id="pickup-location" placeholder="Enter pickup point">
-                                </div>
+                            <div class="col-6">
+                                <label for="distance" class="form-label">Distance (km)</label>
+                                <input type="number" class="form-control" id="distance" readonly>
                             </div>
-                            <div class="col-md-6">
-                                <label for="dropoff-location" class="form-label">Dropoff Location</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-flag-checkered"></i></span>
-                                    <input type="text" class="form-control" id="dropoff-location" placeholder="Enter destination">
-                                </div>
+                            <div class="col-6">
+                                <label for="duration" class="form-label">Duration (min)</label>
+                                <input type="number" class="form-control" id="duration" readonly>
                             </div>
                         </div>
-                        
-                        <div class="mb-4">
-                            <label for="distance-advanced" class="form-label">Distance (km): <span id="distance-value-advanced">10</span></label>
-                            <input type="range" class="form-range" id="distance-advanced" min="1" max="100" value="10">
-                            <div class="d-flex justify-content-between small text-muted">
-                                <span>1 km</span>
-                                <span>25 km</span>
-                                <span>50 km</span>
-                                <span>75 km</span>
-                                <span>100 km</span>
-                            </div>
+
+                        <!-- Passenger Count -->
+                        <div class="mb-3">
+                            <label for="passenger_count" class="form-label">Number of Passengers</label>
+                            <select class="form-select" id="passenger_count">
+                                <option value="1">1 Passenger</option>
+                                <option value="2">2 Passengers</option>
+                                <option value="3">3 Passengers</option>
+                                <option value="4">4 Passengers</option>
+                            </select>
                         </div>
-                        
-                        <div class="mb-4">
-                            <label for="duration-advanced" class="form-label">Estimated Duration (min): <span id="duration-value-advanced">20</span></label>
-                            <input type="range" class="form-range" id="duration-advanced" min="5" max="180" value="20">
-                            <div class="d-flex justify-content-between small text-muted">
-                                <span>5 min</span>
-                                <span>50 min</span>
-                                <span>100 min</span>
-                                <span>150 min</span>
-                                <span>180 min</span>
-                            </div>
+
+                        <!-- Taxi Type Selection -->
+                        <div class="mb-3">
+                            <label for="taxi_type" class="form-label">Taxi Type</label>
+                            <select class="form-select" id="taxi_type">
+                                <option value="Sedan">Sedan</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Electric">Electric</option>
+                            </select>
                         </div>
-                        
-                        <div class="mb-4">
-                            <label class="form-label mb-2">Taxi Type</label>
-                            <div class="taxi-type-selector-advanced">
-                                <div class="row row-cols-2 g-2">
-                                    <div class="col">
-                                        <input type="radio" class="btn-check" name="taxi-type-advanced" id="type-sedan-advanced" value="Sedan" checked>
-                                        <label class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3" for="type-sedan-advanced">
-                                            <i class="fas fa-car fa-2x mb-2"></i>
-                                            <span>Sedan</span>
-                                            <span class="badge bg-secondary mt-1">₹15/km</span>
-                                        </label>
-                                    </div>
-                                    <div class="col">
-                                        <input type="radio" class="btn-check" name="taxi-type-advanced" id="type-suv-advanced" value="SUV">
-                                        <label class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3" for="type-suv-advanced">
-                                            <i class="fas fa-truck fa-2x mb-2"></i>
-                                            <span>SUV</span>
-                                            <span class="badge bg-secondary mt-1">₹20/km</span>
-                                        </label>
-                                    </div>
-                                    <div class="col">
-                                        <input type="radio" class="btn-check" name="taxi-type-advanced" id="type-electric-advanced" value="Electric">
-                                        <label class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3" for="type-electric-advanced">
-                                            <i class="fas fa-leaf fa-2x mb-2"></i>
-                                            <span>Electric</span>
-                                            <span class="badge bg-success mt-1">ECO</span>
-                                        </label>
-                                    </div>
-                                    <div class="col">
-                                        <input type="radio" class="btn-check" name="taxi-type-advanced" id="type-luxury-advanced" value="Luxury">
-                                        <label class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3" for="type-luxury-advanced">
-                                            <i class="fas fa-star fa-2x mb-2"></i>
-                                            <span>Luxury</span>
-                                            <span class="badge bg-secondary mt-1">₹25/km</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="time-of-day-advanced" class="form-label">Time of Day</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                                <select id="time-of-day-advanced" class="form-select">
-                                    <option value="early_morning">Early Morning (5-7 AM)</option>
-                                    <option value="morning_rush">Morning Rush (7-9 AM)</option>
-                                    <option value="day" selected>Day (9 AM-4 PM)</option>
-                                    <option value="evening_rush">Evening Rush (4-7 PM)</option>
-                                    <option value="evening">Evening (7-10 PM)</option>
-                                    <option value="night">Night (10 PM-5 AM)</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <div class="row">
-                                <div class="col-md-6 mb-3 mb-md-0">
-                                    <label for="date-of-travel" class="form-label">Date of Travel</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                        <input type="date" class="form-control" id="date-of-travel">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="passengers" class="form-label">Passengers</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-users"></i></span>
-                                        <select id="passengers" class="form-select">
-                                            <option>1</option>
-                                            <option selected>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5+</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="currency-advanced" class="form-label">Currency</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
-                                <select id="currency-advanced" class="form-select">
-                                    <option value="INR" selected>Indian Rupee (₹)</option>
-                                    <option value="USD">US Dollar ($)</option>
-                                    <option value="EUR">Euro (€)</option>
-                                    <option value="GBP">British Pound (£)</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="fas fa-calculator me-2"></i>Calculate Detailed Fare
+
+                        <!-- Calculate Button -->
+                        <button type="button" class="btn btn-primary w-100" onclick="calculateFare()">
+                            <i class="fas fa-calculator me-2"></i>Calculate Base Fare
                         </button>
                     </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Fare Results -->
-        <div class="col-lg-7">
-            <div class="row">
-                <!-- Current Fare Card -->
-                <div class="col-12 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Detailed Fare Estimate</h5>
-                        </div>
-                        <div id="fare-results-container" class="card-body">
-                            <div id="fare-loading-advanced" class="d-flex justify-content-center align-items-center py-5">
-                                <div class="text-center">
-                                    <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                    <p class="mb-0">Calculating your fare estimate...</p>
-                                </div>
-                            </div>
-                            
-                            <div id="fare-details-advanced" class="d-none">
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 mb-md-0">
-                                        <div class="text-center mb-3">
-                                            <h2 id="fare-amount-advanced" class="display-4 mb-0 text-primary">₹---.--</h2>
-                                            <p id="fare-description-advanced" class="text-muted">Estimated fare for your trip</p>
-                                        </div>
-                                        
-                                        <div class="fare-breakdown mt-4">
-                                            <h5 class="mb-3">Fare Breakdown</h5>
-                                            <table class="table table-sm">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Base Fare</td>
-                                                        <td id="base-fare-advanced" class="text-end">₹--.-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Distance Charge (km)</td>
-                                                        <td id="distance-fare-advanced" class="text-end">₹--.-</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Time Charge (min)</td>
-                                                        <td id="time-fare-advanced" class="text-end">₹--.-</td>
-                                                    </tr>
-                                                    <tr class="table-secondary">
-                                                        <td><strong>Base Total</strong></td>
-                                                        <td id="raw-fare-advanced" class="text-end"><strong>₹--.-</strong></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        
-                                        <div class="mt-3 mb-4">
-                                            <a href="#" class="btn btn-sm btn-outline-secondary w-100" data-bs-toggle="collapse" data-bs-target="#fare-extras">
-                                                <i class="fas fa-plus-circle me-1"></i> Show Additional Options
-                                            </a>
-                                            <div id="fare-extras" class="collapse mt-3">
-                                                <div class="card card-body bg-light">
-                                                    <h6 class="mb-2">Additional Options:</h6>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="checkbox" id="add-waiting">
-                                                        <label class="form-check-label" for="add-waiting">
-                                                            Add Waiting Time (₹50/hour)
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-2">
-                                                        <input class="form-check-input" type="checkbox" id="add-luggage">
-                                                        <label class="form-check-label" for="add-luggage">
-                                                            Extra Luggage (₹30)
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="add-ac">
-                                                        <label class="form-check-label" for="add-ac">
-                                                            AC Premium (₹50)
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <h5 class="mb-3">Fare Adjustment Factors</h5>
-                                        <div id="factors-list-advanced">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="me-2 text-danger">
-                                                        <i class="fas fa-traffic-light fa-lg"></i>
-                                                    </div>
-                                                    <div>
-                                                        <strong>Traffic</strong>
-                                                        <div class="text-muted small" id="traffic-condition-advanced">Moderate traffic conditions</div>
-                                                    </div>
-                                                </div>
-                                                <span id="traffic-factor-advanced" class="badge bg-warning">x1.2</span>
-                                            </div>
-                                            
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="me-2 text-primary">
-                                                        <i class="fas fa-cloud fa-lg"></i>
-                                                    </div>
-                                                    <div>
-                                                        <strong>Weather</strong>
-                                                        <div class="text-muted small" id="weather-condition-advanced">Clear conditions</div>
-                                                    </div>
-                                                </div>
-                                                <span id="weather-factor-advanced" class="badge bg-success">x1.0</span>
-                                            </div>
-                                            
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="me-2 text-warning">
-                                                        <i class="fas fa-clock fa-lg"></i>
-                                                    </div>
-                                                    <div>
-                                                        <strong>Time of Day</strong>
-                                                        <div class="text-muted small" id="time-period-advanced">Day time rate</div>
-                                                    </div>
-                                                </div>
-                                                <span id="time-factor-advanced" class="badge bg-success">x1.0</span>
-                                            </div>
-                                            
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="me-2 text-success">
-                                                        <i class="fas fa-chart-line fa-lg"></i>
-                                                    </div>
-                                                    <div>
-                                                        <strong>Demand</strong>
-                                                        <div class="text-muted small" id="demand-level-advanced">Normal demand</div>
-                                                    </div>
-                                                </div>
-                                                <span id="demand-factor-advanced" class="badge bg-success">x1.0</span>
-                                            </div>
-                                            
-                                            <div id="eco-discount-row-advanced" class="d-flex justify-content-between align-items-center mb-3 d-none">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="me-2 text-success">
-                                                        <i class="fas fa-leaf fa-lg"></i>
-                                                    </div>
-                                                    <div>
-                                                        <strong>Eco Discount</strong>
-                                                        <div class="text-muted small">Electric vehicle discount</div>
-                                                    </div>
-                                                </div>
-                                                <span id="eco-discount-advanced" class="badge bg-success">-10%</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-4">
-                                            <h5 class="mb-3">Final Fare Calculation</h5>
-                                            <div class="alert alert-light border">
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <i class="fas fa-equals text-primary me-2"></i>
-                                                    <strong>Formula:</strong>
-                                                </div>
-                                                <div class="formula-display small">
-                                                    Base Fare (₹<span id="raw-fare-calc">0</span>) × Traffic (<span id="traffic-calc">1.0</span>) × Weather (<span id="weather-calc">1.0</span>) × Time (<span id="time-calc">1.0</span>) × Demand (<span id="demand-calc">1.0</span>) <span id="eco-calc" class="d-none">× Eco (0.9)</span>
-                                                </div>
-                                                <div class="mt-2 text-end">
-                                                    <strong>= ₹<span id="final-fare-calc">0</span></strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <hr class="my-4">
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>Future Fare Predictions</h5>
-                                        <div class="prediction-chart-container">
-                                            <canvas id="predictionChart"></canvas>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <h5 class="mb-3"><i class="fas fa-leaf me-2"></i>Environmental Impact</h5>
-                                        <div class="card border-0 bg-light mb-3">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>CO2 Emissions:</span>
-                                                    <span id="co2-amount">1200g</span>
-                                                </div>
-                                                <div class="progress mb-3" style="height: 8px;">
-                                                    <div id="co2-progress" class="progress-bar bg-success" style="width: 60%;"></div>
-                                                </div>
-                                                <div class="small text-muted" id="eco-impact-text">
-                                                    This trip produces the equivalent CO2 of charging 150 smartphones.
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div id="eco-suggestions">
-                                            <h6 class="mb-2">Eco-Friendly Suggestions:</h6>
-                                            <ul class="list-group">
-                                                <li class="list-group-item d-flex align-items-center">
-                                                    <i class="fas fa-leaf text-success me-2"></i>
-                                                    Switch to Electric taxi to save 100% emissions
-                                                </li>
-                                                <li class="list-group-item d-flex align-items-center">
-                                                    <i class="fas fa-users text-primary me-2"></i>
-                                                    Share your ride to cut per-person emissions
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-4 text-center">
-                                    <a href="#" class="btn btn-outline-primary me-2">
-                                        <i class="fas fa-print me-1"></i> Print Estimate
-                                    </a>
-                                    <a href="#" class="btn btn-outline-success me-2">
-                                        <i class="fas fa-share-alt me-1"></i> Share
-                                    </a>
-                                    <a href="/eco-friendly" class="btn btn-success">
-                                        <i class="fas fa-leaf me-1"></i> Eco-Friendly Options
-                                    </a>
+
+                    <!-- Results Section -->
+                    <div id="fareResults" class="mt-4" style="display: none;">
+                        <h5 class="border-bottom pb-2">Base Fare Estimate</h5>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-success">
+                                    <h4 class="mb-0" id="totalFare">₹0.00</h4>
+                                    <small class="text-muted" id="fareDetails"></small>
                                 </div>
                             </div>
                         </div>
@@ -415,149 +102,46 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize sliders
-        const distanceSlider = document.getElementById('distance-advanced');
-        const distanceValue = document.getElementById('distance-value-advanced');
-        
-        const durationSlider = document.getElementById('duration-advanced');
-        const durationValue = document.getElementById('duration-value-advanced');
-        
-        distanceSlider.addEventListener('input', function() {
-            distanceValue.textContent = this.value;
-        });
-        
-        durationSlider.addEventListener('input', function() {
-            durationValue.textContent = this.value;
-        });
-        
-        // Set today's date as default
-        const dateInput = document.getElementById('date-of-travel');
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-        dateInput.value = formattedDate;
-        
-        // Show fare details instead of loading (for demo)
-        setTimeout(function() {
-            document.getElementById('fare-loading-advanced').classList.add('d-none');
-            document.getElementById('fare-details-advanced').classList.remove('d-none');
-            
-            // Initialize prediction chart
-            const ctx = document.getElementById('predictionChart').getContext('2d');
-            const predictionChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Now', '+15 min', '+30 min', '+60 min'],
-                    datasets: [{
-                        label: 'Estimated Fare (₹)',
-                        data: [328, 394, 459, 361],
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        tension: 0.3,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                        pointRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            title: {
-                                display: true,
-                                text: 'Fare (₹)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Time'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '₹' + context.parsed.y;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }, 1500);
-        
-        // Make form submission interactive
-        document.getElementById('fare-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading
-            document.getElementById('fare-details-advanced').classList.add('d-none');
-            document.getElementById('fare-loading-advanced').classList.remove('d-none');
-            
-            // Simulate calculation
-            setTimeout(function() {
-                document.getElementById('fare-loading-advanced').classList.add('d-none');
-                document.getElementById('fare-details-advanced').classList.remove('d-none');
-                
-                // Update values based on form inputs
-                const distance = document.getElementById('distance-advanced').value;
-                const duration = document.getElementById('duration-advanced').value;
-                const vehicle = document.querySelector('input[name="taxi-type-advanced"]:checked').value;
-                
-                // Show eco discount for electric vehicles
-                if (vehicle === 'Electric') {
-                    document.getElementById('eco-discount-row-advanced').classList.remove('d-none');
-                    document.getElementById('eco-calc').classList.remove('d-none');
-                } else {
-                    document.getElementById('eco-discount-row-advanced').classList.add('d-none');
-                    document.getElementById('eco-calc').classList.add('d-none');
-                }
-                
-                // Calculate base fare - simplified example
-                const baseFare = 50;
-                const distanceFare = vehicle === 'Sedan' ? distance * 15 : 
-                                    vehicle === 'SUV' ? distance * 20 :
-                                    vehicle === 'Electric' ? distance * 16 :
-                                    distance * 25;
-                const timeFare = vehicle === 'Sedan' ? duration * 3.5 : 
-                                vehicle === 'SUV' ? duration * 4.5 :
-                                vehicle === 'Electric' ? duration * 4 :
-                                duration * 6;
-                
-                const rawFare = baseFare + distanceFare + timeFare;
-                
-                // Factors - would normally come from API
-                const trafficFactor = 1.2;
-                const weatherFactor = 1.0;
-                const timeFactor = 1.0;
-                const demandFactor = 1.0;
-                
-                // Apply eco discount if applicable
-                const ecoFactor = vehicle === 'Electric' ? 0.9 : 1.0;
-                
-                // Calculate final fare
-                const finalFare = rawFare * trafficFactor * weatherFactor * timeFactor * demandFactor * ecoFactor;
-                
-                // Update displayed values
-                document.getElementById('fare-amount-advanced').textContent = '₹' + finalFare.toFixed(2);
-                document.getElementById('base-fare-advanced').textContent = '₹' + baseFare.toFixed(2);
-                document.getElementById('distance-fare-advanced').textContent = '₹' + distanceFare.toFixed(2);
-                document.getElementById('time-fare-advanced').textContent = '₹' + timeFare.toFixed(2);
-                document.getElementById('raw-fare-advanced').textContent = '₹' + rawFare.toFixed(2);
-                
-                // Update calculation formula
-                document.getElementById('raw-fare-calc').textContent = rawFare.toFixed(2);
-                document.getElementById('traffic-calc').textContent = trafficFactor.toFixed(1);
-                document.getElementById('weather-calc').textContent = weatherFactor.toFixed(1);
-                document.getElementById('time-calc').textContent = timeFactor.toFixed(1);
-                document.getElementById('demand-calc').textContent = demandFactor.toFixed(1);
-                document.getElementById('final-fare-calc').textContent = finalFare.toFixed(2);
-            }, 1000);
-        });
-    });
+function calculateFare() {
+    const formData = {
+        pickup_location: document.getElementById('pickup_location').value,
+        dropoff_location: document.getElementById('dropoff_location').value,
+        distance: parseFloat(document.getElementById('distance').value),
+        duration: parseFloat(document.getElementById('duration').value),
+        passenger_count: parseInt(document.getElementById('passenger_count').value),
+        taxi_type: document.getElementById('taxi_type').value
+    };
+
+    // Calculate base fare based on distance, duration, and passenger count
+    const baseRate = {
+        'Sedan': 15,
+        'SUV': 20,
+        'Luxury': 25,
+        'Electric': 18
+    };
+
+    const baseFare = 50; // Starting fare
+    const distanceFare = formData.distance * baseRate[formData.taxi_type];
+    const timeFare = formData.duration * 2; // ₹2 per minute
+    const passengerMultiplier = 1 + (formData.passenger_count - 1) * 0.2; // 20% increase per additional passenger
+
+    const totalFare = (baseFare + distanceFare + timeFare) * passengerMultiplier;
+
+    // Display results
+    document.getElementById('fareResults').style.display = 'block';
+    document.getElementById('totalFare').textContent = `₹${totalFare.toFixed(2)}`;
+    
+    // Show fare breakdown
+    const details = [
+        `Base Fare: ₹${baseFare.toFixed(2)}`,
+        `Distance Fare: ₹${distanceFare.toFixed(2)}`,
+        `Time Fare: ₹${timeFare.toFixed(2)}`,
+        `Passenger Multiplier: ${(passengerMultiplier * 100).toFixed(0)}%`
+    ].join(' | ');
+    
+    document.getElementById('fareDetails').textContent = details;
+}
 </script>
 {% endblock %}

@@ -50,7 +50,7 @@ DEMAND_SURGE_MODIFIERS = {
 ECO_DISCOUNT = 0.1  # 10% discount for electric taxis
 
 def calculate_fare(distance, duration, taxi_type, traffic_conditions, weather_conditions, 
-                  time_of_day, exchange_rate=1.0, currency='USD'):
+                  time_of_day, exchange_rate=1.0, currency='USD', passenger_count=1):
     """
     Calculate taxi fare based on multiple factors.
     
@@ -63,6 +63,7 @@ def calculate_fare(distance, duration, taxi_type, traffic_conditions, weather_co
         time_of_day (str): Time period (early_morning, morning_rush, day, evening_rush, evening, night)
         exchange_rate (float): Exchange rate to convert from USD
         currency (str): Target currency code
+        passenger_count (int): Number of passengers (default: 1)
         
     Returns:
         dict: Fare details including base fare, distance fare, time fare, adjusted fare, and factors affecting price
@@ -98,8 +99,12 @@ def calculate_fare(distance, duration, taxi_type, traffic_conditions, weather_co
         if taxi_type == 'Electric':
             adjusted_fare = adjusted_fare * (1 - ECO_DISCOUNT)
         
+        # Apply passenger multiplier (cap at 5 passengers)
+        passenger_count = min(int(passenger_count), 5)
+        total_fare = adjusted_fare * passenger_count
+        
         # Convert to requested currency
-        converted_fare = adjusted_fare * exchange_rate
+        converted_fare = total_fare * exchange_rate
         
         # Round to 2 decimal places
         converted_fare = round(converted_fare, 2)
@@ -110,8 +115,10 @@ def calculate_fare(distance, duration, taxi_type, traffic_conditions, weather_co
             'distance_fare': round(distance_fare * exchange_rate, 2),
             'time_fare': round(time_fare * exchange_rate, 2),
             'raw_fare': round(raw_fare * exchange_rate, 2),
-            'adjusted_fare': converted_fare,
+            'adjusted_fare': round(adjusted_fare * exchange_rate, 2),
+            'total_fare': converted_fare,
             'currency': currency,
+            'passenger_count': passenger_count,
             'factors': {
                 'traffic': {'condition': traffic_conditions, 'modifier': traffic_modifier},
                 'weather': {'condition': weather_conditions, 'modifier': weather_modifier},

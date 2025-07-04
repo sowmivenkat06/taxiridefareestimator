@@ -33,109 +33,92 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                            <a class="nav-link" href="/">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/fare-calculator"><i class="fas fa-calculator me-1"></i> Fare Calculator</a>
+                            <a class="nav-link" href="/fare-calculator">Fare Calculator</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/how-it-works"><i class="fas fa-info-circle me-1"></i> How It Works</a>
+                            <a class="nav-link" href="/eco-friendly">Eco-Friendly</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/eco-friendly"><i class="fas fa-leaf me-1"></i> Eco-Friendly</a>
+                            <a class="nav-link" href="/ride-history">Ride History</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/about"><i class="fas fa-address-card me-1"></i> About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contact"><i class="fas fa-envelope me-1"></i> Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <div class="currency-selector ms-3">
-                                <select id="currency-select" class="form-select form-select-sm">
-                                    <option value="INR" selected>INR (₹)</option>
-                                    <option value="USD">USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                </select>
-                            </div>
+                            <a class="nav-link" href="/about">About</a>
                         </li>
                     </ul>
+                    <div class="d-flex align-items-center">
+                        {% if session.user_id %}
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-1"></i>
+                                Account
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/settings">Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                        <a href="/login" class="btn btn-outline-light me-2">Login</a>
+                        <a href="/register" class="btn btn-primary">Register</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </nav>
 
         <!-- Main Content -->
-        <main class="flex-grow-1 py-4">
+        <main class="flex-grow-1">
+            <div class="container-fluid py-3" style="max-width: 1400px;">
             {% block content %}{% endblock %}
+            </div>
         </main>
 
         <!-- Footer -->
-        <footer class="bg-dark text-white py-4 mt-auto">
+        <footer class="bg-dark text-light py-4 mt-auto">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <h5><i class="fas fa-taxi text-warning me-2"></i> TamilRide</h5>
-                        <p class="text-muted">Smart fare estimation for taxi services across Tamil Nadu, India.</p>
-                        <div class="social-icons">
-                            <a href="#" class="text-light me-2"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-light me-2"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
+                    <div class="col-md-4">
+                        <h5>About TamilRide</h5>
+                        <p>Smart taxi fare calculator for Tamil Nadu, helping you plan your rides efficiently and eco-friendly.</p>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <h5>Service Areas</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-light">Chennai</a></li>
-                            <li><a href="#" class="text-light">Coimbatore</a></li>
-                            <li><a href="#" class="text-light">Madurai</a></li>
-                            <li><a href="#" class="text-light">Tiruchirappalli</a></li>
-                            <li><a href="#" class="text-light">Salem</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4">
                         <h5>Quick Links</h5>
                         <ul class="list-unstyled">
                             <li><a href="/" class="text-light">Home</a></li>
                             <li><a href="/fare-calculator" class="text-light">Fare Calculator</a></li>
-                            <li><a href="/how-it-works" class="text-light">How It Works</a></li>
-                            <li><a href="/eco-friendly" class="text-light">Eco-Friendly Options</a></li>
+                            <li><a href="/eco-friendly" class="text-light">Eco-Friendly</a></li>
                             <li><a href="/about" class="text-light">About Us</a></li>
-                            <li><a href="/contact" class="text-light">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Contact Us</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-envelope me-2"></i> support@tamilride.com</li>
+                            <li><i class="fas fa-phone me-2"></i> +91 1234567890</li>
                         </ul>
                     </div>
                 </div>
-                <hr class="my-3 bg-secondary">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start">
-                        <p class="mb-0">&copy; 2025 TamilRide. All rights reserved.</p>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <p class="mb-0">
-                            <a href="#" class="text-light me-3">Privacy Policy</a>
-                            <a href="#" class="text-light me-3">Terms of Service</a>
-                            <a href="#" class="text-light">FAQ</a>
-                        </p>
-                    </div>
+                <hr>
+                <div class="text-center">
+                    <p class="mb-0">&copy; 2023 TamilRide. All rights reserved.</p>
                 </div>
             </div>
         </footer>
     </div>
 
+    <script src="{{ url_for('static', filename='js/ride_history.js') }}"></script>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
-    <!-- Custom JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/chart-config.js') }}"></script>
-    
-    <!-- Additional scripts -->
+    <!-- Custom Scripts -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

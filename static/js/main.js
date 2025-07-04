@@ -2,7 +2,7 @@
 let fareData = null;
 let predictionData = null;
 let predictionChart = null;
-let currencySymbol = '$';
+let currencySymbol = '₹';
 
 // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -208,24 +208,17 @@ function hideLoadingState() {
 
 // Set currency symbol based on selected currency
 function setCurrencySymbol(currencyCode) {
-    const symbols = {
-        'USD': '$',
-        'EUR': '€',
-        'GBP': '£',
-        'JPY': '¥',
-        'CAD': 'C$',
-        'AUD': 'A$',
-        'CNY': '¥',
+    const symbolMap = {
         'INR': '₹'
     };
-    
-    currencySymbol = symbols[currencyCode] || '$';
+    currencySymbol = symbolMap[currencyCode] || '₹';
+    updateCurrencyDisplay();
 }
 
 // Update fare display with calculation results
 function updateFareDisplay(data) {
     // Update main fare amount
-    document.getElementById('fare-amount').textContent = currencySymbol + data.adjusted_fare.toFixed(2);
+    document.getElementById('fare-amount').textContent = currencySymbol + formatNumber(data.total_fare);
     
     // Update fare description
     const taxiType = getSelectedTaxiType();
@@ -233,10 +226,10 @@ function updateFareDisplay(data) {
         `Estimated ${taxiType} fare (${data.currency})`;
     
     // Update fare breakdown
-    document.getElementById('base-fare').textContent = currencySymbol + data.base_fare.toFixed(2);
-    document.getElementById('distance-fare').textContent = currencySymbol + data.distance_fare.toFixed(2);
-    document.getElementById('time-fare').textContent = currencySymbol + data.time_fare.toFixed(2);
-    document.getElementById('raw-fare').textContent = currencySymbol + data.raw_fare.toFixed(2);
+    document.getElementById('base-fare').textContent = currencySymbol + formatNumber(data.base_fare);
+    document.getElementById('distance-fare').textContent = currencySymbol + formatNumber(data.distance_fare);
+    document.getElementById('time-fare').textContent = currencySymbol + formatNumber(data.time_fare);
+    document.getElementById('raw-fare').textContent = currencySymbol + formatNumber(data.raw_fare);
     
     // Update fare factors
     updateFactorBadge('traffic-factor', data.factors.traffic.condition, data.factors.traffic.modifier);
@@ -254,6 +247,9 @@ function updateFareDisplay(data) {
     } else {
         ecoDiscountRow.classList.add('d-none');
     }
+    
+    // Show the fare details
+    document.getElementById('fare-details').classList.remove('d-none');
 }
 
 // Update eco display with environmental impact data
